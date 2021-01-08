@@ -109,9 +109,9 @@
          initialContext.ws = ws;
          return callback(null, initialContext);
        });
-      //  ws.on('message', function(msg) {
-      //    console.log('RECEIVED MSG!', msg)
-      //  })
+       ws.on('message', function(msg) {
+         console.log('RECEIVED MSG:', msg)
+       })
        ws.once('error', function(err) {
          debug(err);
          ee.emit('error', err.code);

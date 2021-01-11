@@ -10,8 +10,9 @@
  const debug = require('debug')('ws');
  const engineUtil = require('./engine_util');
  const template = engineUtil.template;
+ let totalMessages = 0;
 
- module.exports = WSEngine;
+module.exports = WSEngine;
 
  function WSEngine(script) {
    this.config = script.config;
@@ -110,8 +111,17 @@
          return callback(null, initialContext);
        });
        ws.on('message', function(msg) {
-         console.log('RECEIVED MSG:', msg)
+         let parsedMsg;
+         try {
+           parsedMsg = JSON.parse(msg)
+         } catch (e) {}
+         if (parsedMsg && parsedMsg.type === 'data') {
+           // console.log('RECEIVED MSG:', msg)
+           totalMessages++;
+           ee.emit('customStat', { stat: 'received_socket_messages', value: totalMessages });
+         }
        })
+       totalMessages = 0;
        ws.once('error', function(err) {
          debug(err);
          ee.emit('error', err.code);

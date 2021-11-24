@@ -99,7 +99,7 @@ module.exports = WSEngine;
 
        ee.emit('started');
 
-       let ws = new WebSocket(config.target, 'graphql-ws');
+       let ws = new WebSocket(config.target, 'graphql-transport-ws');
        ws.on('open', function() {
          const message = { type: "connection_init", payload: { portalId: 22, culture: "de-CH" } }
          const result = ws.send(JSON.stringify(message), function(err) {
